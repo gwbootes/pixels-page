@@ -314,10 +314,16 @@
       bottom: calc(24px + 30px);
       left: 30%;
       user-select: none;
-      filter: hue-rotate(280deg) saturate(3) brightness(1.3);
-      animation: byte-swim 9s ease-in-out infinite;
+      animation: byte-swim 9s ease-in-out infinite, lisa-frank 2.5s linear infinite;
       will-change: transform;
       z-index: 2;
+    }
+    @keyframes lisa-frank {
+      0%   { filter: hue-rotate(100deg) saturate(5) brightness(1.4); }
+      25%  { filter: hue-rotate(200deg) saturate(5) brightness(1.4); }
+      50%  { filter: hue-rotate(300deg) saturate(5) brightness(1.4); }
+      75%  { filter: hue-rotate(50deg)  saturate(5) brightness(1.4); }
+      100% { filter: hue-rotate(100deg) saturate(5) brightness(1.4); }
     }
     @keyframes byte-swim {
       0%   { transform: translateX(0)     scaleX(1);  bottom: calc(24px + 30px); }
