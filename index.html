@@ -914,6 +914,58 @@
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+
+  // ── CURSOR SPARKLES ──
+  (function() {
+    const SPARKLES = ['✦','✧','★','✨','💜','·','∗','⭐'];
+    const COLORS = ['#ff99ff','#cc66ff','#ffff00','#ff66cc','#00ffee','#ffffff','#ff99cc','#ddaaff'];
+    let lastX = 0, lastY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      const dx = Math.abs(e.clientX - lastX);
+      const dy = Math.abs(e.clientY - lastY);
+      if (dx < 6 && dy < 6) return; // only spawn when actually moving
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      const s = document.createElement('div');
+      const symbol = SPARKLES[Math.floor(Math.random() * SPARKLES.length)];
+      const color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const size   = (Math.random() * 10 + 8) + 'px';
+      const floatX = (Math.random() * 24 - 12) + 'px';
+      const floatY = (Math.random() * 20 + 10) + 'px';
+      const rot    = (Math.random() * 120 - 60) + 'deg';
+      const dur    = (Math.random() * 500 + 500) + 'ms';
+
+      s.textContent = symbol;
+      s.style.cssText = `
+        position:fixed;
+        left:${e.clientX + (Math.random()*10-5)}px;
+        top:${e.clientY + (Math.random()*10-5)}px;
+        font-size:${size};
+        color:${color};
+        pointer-events:none;
+        z-index:9999;
+        user-select:none;
+        animation:sparkle-fade ${dur} ease-out forwards;
+        --fx:${floatX};
+        --fy:-${floatY};
+        --fr:${rot};
+        text-shadow:0 0 4px ${color};
+      `;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 700);
+    });
+
+    const sparkleStyle = document.createElement('style');
+    sparkleStyle.textContent = `
+      @keyframes sparkle-fade {
+        0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+        100% { transform: translate(var(--fx), var(--fy)) rotate(var(--fr)) scale(0.2); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(sparkleStyle);
+  })();
 </script>
 </body>
 </html>
