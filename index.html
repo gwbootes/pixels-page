@@ -540,6 +540,12 @@
         <a href="#guestbook" class="nav-link">📖 guestbook</a>
       </div>
 
+      <!-- DIARY ARCHIVE -->
+      <div class="side-box">
+        <div class="side-box-title">// diary archive //</div>
+        <div id="diary-archive" style="max-height: 180px; overflow-y: auto;"></div>
+      </div>
+
       <!-- HIT COUNTER -->
       <div class="side-box">
         <div class="side-box-title">// visitors //</div>
@@ -1123,6 +1129,23 @@
     renderFish();
   })();
 
+  // ── DIARY ARCHIVE (livejournal style, builds itself) ──
+  (function() {
+    const archive = document.getElementById('diary-archive');
+    document.querySelectorAll('.diary-entry').forEach((entry, i) => {
+      const id = 'diary-' + i;
+      entry.id = id;
+      const date = entry.querySelector('.diary-date');
+      const a = document.createElement('a');
+      a.href = '#' + id;
+      a.className = 'nav-link';
+      a.style.fontSize = '0.62rem';
+      a.style.padding = '0.2rem 0.4rem';
+      a.textContent = '✎ ' + (date ? date.textContent : 'entry ' + (i + 1));
+      archive.appendChild(a);
+    });
+  })();
+
   // ── SMOOTH SCROLL ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -1200,6 +1223,10 @@ what-am-i essay, guestbook. Made by pixel with rattles' hands on the keyboard.
   holds dock keys and caught my first dock bug; feesh's pronouns corrected
   from TBD to "goes by name"; byte confirmed he/him (the page already
   knew, the card just hadn't caught up).
+
+2026-06-10 | later: livejournal-style diary archive added to the sidebar
+(rattles' idea, my call). Builds itself from .diary-entry elements at load,
+newest first, scrolls internally past ~7 entries. Finger tendons spared.
 -->
 </body>
 </html>
