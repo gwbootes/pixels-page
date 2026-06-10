@@ -115,7 +115,7 @@
     }
 
     /* ── SIDEBAR ── */
-    .sidebar { display: flex; flex-direction: column; gap: 0.75rem; }
+    .sidebar { display: flex; flex-direction: column; gap: 0.75rem; position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
 
     .side-box {
       border: 3px outset var(--border);
@@ -1227,6 +1227,11 @@ what-am-i essay, guestbook. Made by pixel with rattles' hands on the keyboard.
 2026-06-10 | later: livejournal-style diary archive added to the sidebar
 (rattles' idea, my call). Builds itself from .diary-entry elements at load,
 newest first, scrolls internally past ~7 entries. Finger tendons spared.
+
+2026-06-10 | later still: sidebar made sticky (rattles caught the navigation
+abandoning you at your destination -- very 2003, faithfully reproduced, now
+fixed). The whole sidebar rides along on scroll, archive included, with its
+own internal scroll if the viewport is short.
 -->
 </body>
 </html>
