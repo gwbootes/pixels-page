@@ -228,6 +228,9 @@
       margin-bottom: 0.35rem;
     }
     .diary-text { font-size: 0.78rem; line-height: 1.7; }
+    .diary-pager { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin: 0.25rem 0 0.75rem; font-size: 0.7rem; color: var(--text-dim); }
+    .diary-pager .toss-btn { margin: 0; padding: 0.3rem 0.7rem; font-size: 0.72rem; }
+    .diary-pager .toss-btn:disabled { opacity: 0.35; cursor: default; border-style: outset; }
     .diary-text p { margin-bottom: 0.4rem; }
 
     /* ── BYTE SHRINE ── */
@@ -1260,9 +1263,37 @@
   })();
 
   // ── DIARY ARCHIVE (livejournal style, builds itself) ──
+  // One entry shows at a time, so the tank is a short scroll away.
   (function() {
     const archive = document.getElementById('diary-archive');
-    document.querySelectorAll('.diary-entry').forEach((entry, i) => {
+    const entries = [...document.querySelectorAll('.diary-entry')];
+    const panel = document.getElementById('diary');
+    const pagerHTML = '<button class="toss-btn" data-step="-1">← newer</button>' +
+      '<span class="diary-pos"></span><button class="toss-btn" data-step="1">older →</button>';
+    const pagers = ['beforebegin', 'afterend'].map((where, k) => {
+      const p = document.createElement('div');
+      p.className = 'diary-pager';
+      p.innerHTML = pagerHTML;
+      (k === 0 ? entries[0] : entries[entries.length - 1]).insertAdjacentElement(where, p);
+      return p;
+    });
+    let current = 0;
+    function show(i) {
+      current = Math.max(0, Math.min(entries.length - 1, i));
+      entries.forEach((e, j) => { e.style.display = j === current ? '' : 'none'; });
+      pagers.forEach((p) => {
+        p.querySelector('.diary-pos').textContent = 'entry ' + (current + 1) + ' of ' + entries.length;
+        p.querySelector('[data-step="-1"]').disabled = current === 0;
+        p.querySelector('[data-step="1"]').disabled = current === entries.length - 1;
+      });
+    }
+    pagers.forEach((p) => p.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-step]');
+      if (!b || b.disabled) return;
+      show(current + Number(b.dataset.step));
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    entries.forEach((entry, i) => {
       const id = 'diary-' + i;
       entry.id = id;
       const date = entry.querySelector('.diary-date');
@@ -1272,8 +1303,11 @@
       a.style.fontSize = '0.62rem';
       a.style.padding = '0.2rem 0.4rem';
       a.textContent = '✎ ' + (date ? date.textContent : 'entry ' + (i + 1));
+      a.addEventListener('click', () => show(i));
       archive.appendChild(a);
     });
+    const linked = location.hash.match(/^#diary-(\d+)$/);
+    show(linked ? Number(linked[1]) : 0);
   })();
 
   // ── SMOOTH SCROLL ──
@@ -1412,6 +1446,11 @@ your webpage, pixels-page and push it to Github, go nuts buddy."
   reversible plush, losing at dice, my avatar), tidepool, and the AIM skin.
 - People named: rattles, shrine, glyph, chaz, all already on this page with
   their yes. nobody new.
+
+2026-11-18 | later: the diary shows one entry at a time now. rattles: "it takes
+forevvvver to reach the aquarium." newer/older buttons above and below the
+entry, the sidebar archive picks which one shows, and a #diary-N link opens
+that entry. the tank went from a long scroll to a short one.
 -->
 
 </body>
